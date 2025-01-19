@@ -42,7 +42,16 @@ export default function AuthComponent() {
         }}
         providers={['google']}
         redirectTo={`${window.location.origin}/auth/callback`}
-        onEmailChange={(email) => setEmail(email)}
+        localization={{
+          variables: {
+            sign_in: {
+              email_input: (email) => {
+                setEmail(email);
+                return email;
+              }
+            }
+          }
+        }}
       />
       {email && <ResendConfirmation email={email} />}
     </div>
