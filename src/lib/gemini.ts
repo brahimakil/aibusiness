@@ -2,16 +2,16 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import { sleep } from '@/utils/helpers';
 import { requestQueue } from '@/utils/requestQueue';
 
-if (!process.env.NEXT_PUBLIC_GEMINI_API_KEY) {
-  throw new Error('Missing NEXT_PUBLIC_GEMINI_API_KEY environment variable');
-}
-
-const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY);
+const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || 'dummy-key');
 const MAX_RETRIES = 3;
-const RETRY_DELAY = 2000; // 2 seconds
+const RETRY_DELAY = 2000;
 
 export const gemini = {
   async generateWithRetry(prompt: string, retries = 0): Promise<string> {
+    if (!process.env.NEXT_PUBLIC_GEMINI_API_KEY) {
+      return 'API key not configured. Please add NEXT_PUBLIC_GEMINI_API_KEY to your environment variables.';
+    }
+
     return requestQueue.add(async () => {
       try {
         const model = genAI.getGenerativeModel({ model: "gemini-pro" });
@@ -22,7 +22,7 @@ export const gemini = {
           await sleep(RETRY_DELAY * (retries + 1));
           return this.generateWithRetry(prompt, retries + 1);
         }
-        throw error;
+        return 'Failed to generate content. Please try again later.';
       }
     });
   },
