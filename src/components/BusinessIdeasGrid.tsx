@@ -1,9 +1,9 @@
 import { motion } from 'framer-motion';
-import { BusinessIdea } from '@/types/database';
+import { Idea } from '@/types/app';
 
 type Props = {
-  ideas: BusinessIdea[];
-  onIdeaClick: (idea: BusinessIdea) => void;
+  ideas: Idea[];
+  onIdeaClick: (idea: Idea) => void;
   selectedId: string | null;
 };
 
