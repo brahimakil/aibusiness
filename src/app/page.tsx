@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { BusinessIdea } from '@/types/database';
 import BusinessIdeasGrid from '@/components/BusinessIdeasGrid';
 import IdeaDetail from '@/components/IdeaDetail';
-import { database } from '@/lib/database';
 import { gemini } from '@/lib/gemini';
 import { motion, AnimatePresence } from 'framer-motion';
 import Header from '@/components/Header';
@@ -24,13 +23,12 @@ export default function Home() {
   const loadInitialIdeas = async () => {
     try {
       const titles = await gemini.generateBusinessIdeas("innovative business ideas");
-      const newIdeas = titles.map((title, index) => ({
-        id: `temp-${index}`,
+      const newIdeas = titles.map((title) => ({
+        id: `idea-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         title,
         description: null,
         category: "Business Innovation",
-        created_at: new Date().toISOString(),
-        metadata: {}
+        created_at: new Date().toISOString()
       }));
       setIdeas(newIdeas);
     } catch (error) {
@@ -52,17 +50,10 @@ export default function Home() {
     
     try {
       const description = await gemini.generateBusinessDescription(selectedIdea.title);
-      const result = await database.createBusinessIdea({
-        ...selectedIdea,
-        description
-      });
-      
-      if (result.data) {
-        setIdeas(ideas.map(idea => 
-          idea.id === selectedIdea.id ? { ...idea, description } : idea
-        ));
-        setSelectedIdea({ ...selectedIdea, description });
-      }
+      setIdeas(ideas.map(idea => 
+        idea.id === selectedIdea.id ? { ...idea, description } : idea
+      ));
+      setSelectedIdea({ ...selectedIdea, description });
     } catch (error) {
       console.error('Failed to generate description:', error);
     }
