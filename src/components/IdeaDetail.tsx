@@ -3,13 +3,12 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { BusinessIdea } from '@/types/database';
 import { useState } from 'react';
+import { LightbulbIcon } from './Icons';
 
 type Props = {
   idea: BusinessIdea;
   onClose: () => void;
   onGenerateDescription: () => Promise<void>;
-  onSave?: () => Promise<void>;
-  isSaved?: boolean;
 };
 
 export default function IdeaDetail({ idea, onClose, onGenerateDescription }: Props) {
@@ -26,14 +25,18 @@ export default function IdeaDetail({ idea, onClose, onGenerateDescription }: Pro
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 20 }}
-      className="w-full bg-white dark:bg-gray-800 rounded-t-3xl shadow-2xl p-4 sm:p-8 
-                 border-t-4 border-blue-500 max-w-4xl mx-auto mt-4 sm:mt-8
-                 fixed bottom-0 left-0 right-0 sm:relative
-                 max-h-[80vh] sm:max-h-none overflow-y-auto"
+      className="fixed inset-x-0 bottom-0 w-full bg-white dark:bg-gray-800 rounded-t-3xl shadow-2xl p-3 sm:p-4 md:p-6
+                 border-t-4 border-blue-500 max-w-4xl mx-auto
+                 sm:relative sm:rounded-3xl sm:my-4
+                 max-h-[85vh] overflow-y-auto
+                 z-50"
     >
-      <div className="flex justify-between items-center mb-6">
-        <motion.div layoutId={`title-${idea.id}`}>
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
+      <div className="flex justify-between items-start mb-6">
+        <motion.div layoutId={`title-${idea.id}`} className="flex items-start space-x-3">
+          <div className="mt-1">
+            <LightbulbIcon />
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
             {idea.title}
           </h2>
         </motion.div>

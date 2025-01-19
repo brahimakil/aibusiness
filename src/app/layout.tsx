@@ -16,6 +16,14 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "AI Business Ideas Generator",
   description: "Generate innovative business ideas with AI",
+  icons: {
+    icon: [
+      {
+        url: '/icon.svg',
+        href: '/icon.svg',
+      },
+    ],
+  },
 };
 
 export default function RootLayout({

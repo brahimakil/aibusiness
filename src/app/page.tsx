@@ -4,12 +4,10 @@ import { useEffect, useState } from 'react';
 import { BusinessIdea } from '@/types/database';
 import BusinessIdeasGrid from '@/components/BusinessIdeasGrid';
 import IdeaDetail from '@/components/IdeaDetail';
-import Settings from '@/components/Settings';
-import Header from '@/components/Header';
 import { database } from '@/lib/database';
 import { gemini } from '@/lib/gemini';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useApp } from '@/contexts/AppContext';
+import Header from '@/components/Header';
 
 export default function Home() {
   const [ideas, setIdeas] = useState<BusinessIdea[]>([]);
@@ -17,7 +15,6 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  const { isDarkMode, toggleDarkMode } = useApp();
 
   useEffect(() => {
     loadInitialIdeas();
@@ -25,7 +22,7 @@ export default function Home() {
 
   const loadInitialIdeas = async () => {
     try {
-      const titles = await gemini.generateBusinessIdeas();
+      const titles = await gemini.generateBusinessIdeas("innovative business ideas");
       const newIdeas = titles.map((title, index) => ({
         id: `temp-${index}`,
         title,
@@ -34,7 +31,8 @@ export default function Home() {
         ai_generated: true,
         created_at: new Date().toISOString(),
         popularity_score: 0,
-        metadata: {}
+        metadata: {},
+        user_id: null
       }));
       setIdeas(newIdeas);
     } catch (error) {
@@ -51,22 +49,59 @@ export default function Home() {
     setIsRefreshing(false);
   };
 
+  const generateDescription = async () => {
+    if (!selectedIdea) return;
+    
+    try {
+      const description = await gemini.generateBusinessDescription(selectedIdea.title);
+      const result = await database.createBusinessIdea({
+        ...selectedIdea,
+        description
+      });
+      
+      if (result.data) {
+        setIdeas(ideas.map(idea => 
+          idea.id === selectedIdea.id ? { ...idea, description } : idea
+        ));
+        setSelectedIdea({ ...selectedIdea, description });
+      }
+    } catch (error) {
+      console.error('Failed to generate description:', error);
+    }
+  };
+
   return (
-    <div className={isDarkMode ? 'dark' : ''}>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
       <Header
         onRefresh={handleRefresh}
         onSettings={() => setShowSettings(true)}
         isRefreshing={isRefreshing}
         loading={loading}
       />
-      <main className="max-w-7xl mx-auto py-6 sm:py-12 px-4">
-        <BusinessIdeasGrid
-          ideas={ideas}
-          onIdeaClick={setSelectedIdea}
-          selectedId={selectedIdea?.id}
-        />
+      <main className="container mx-auto px-4 py-6">
+        {loading ? (
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500" />
+          </div>
+        ) : (
+          <>
+            <BusinessIdeasGrid 
+              ideas={ideas} 
+              onIdeaClick={setSelectedIdea}
+              selectedId={selectedIdea?.id || null}
+            />
+            <AnimatePresence>
+              {selectedIdea && (
+                <IdeaDetail
+                  idea={selectedIdea}
+                  onClose={() => setSelectedIdea(null)}
+                  onGenerateDescription={generateDescription}
+                />
+              )}
+            </AnimatePresence>
+          </>
+        )}
       </main>
-      <Settings isOpen={showSettings} onClose={() => setShowSettings(false)} />
     </div>
   );
 }
