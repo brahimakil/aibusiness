@@ -8,6 +8,7 @@ import { database } from '@/lib/database';
 import { gemini } from '@/lib/gemini';
 import { motion, AnimatePresence } from 'framer-motion';
 import Header from '@/components/Header';
+import Settings from '@/components/Settings';
 
 export default function Home() {
   const [ideas, setIdeas] = useState<BusinessIdea[]>([]);
@@ -99,6 +100,7 @@ export default function Home() {
                 />
               )}
             </AnimatePresence>
+            <Settings isOpen={showSettings} onClose={() => setShowSettings(false)} />
           </>
         )}
       </main>
