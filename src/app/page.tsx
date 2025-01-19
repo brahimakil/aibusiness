@@ -29,11 +29,8 @@ export default function Home() {
         title,
         description: null,
         category: "Business Innovation",
-        ai_generated: true,
         created_at: new Date().toISOString(),
-        popularity_score: 0,
-        metadata: {},
-        user_id: null
+        metadata: {}
       }));
       setIdeas(newIdeas);
     } catch (error) {
