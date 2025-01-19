@@ -1,12 +1,12 @@
 "use client";
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { BusinessIdea } from '@/types/database';
+import { Idea } from '@/types/app';
 import { useState } from 'react';
 import { LightbulbIcon } from './Icons';
 
 type Props = {
-  idea: BusinessIdea;
+  idea: Idea;
   onClose: () => void;
   onGenerateDescription: () => Promise<void>;
 };

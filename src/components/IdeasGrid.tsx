@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from 'react';
-import { BusinessIdea } from '@/types/database';
+import { Idea } from '@/types/app';
 
 type Props = {
-  ideas: BusinessIdea[];
-  onIdeaClick: (idea: BusinessIdea) => void;
+  ideas: Idea[];
+  onIdeaClick: (idea: Idea) => void;
 };
 
 export default function IdeasGrid({ ideas, onIdeaClick }: Props) {

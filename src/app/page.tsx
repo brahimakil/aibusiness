@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { BusinessIdea } from '@/types/database';
+import { Idea } from '@/types/app';
 import BusinessIdeasGrid from '@/components/BusinessIdeasGrid';
 import IdeaDetail from '@/components/IdeaDetail';
 import { gemini } from '@/lib/gemini';
@@ -10,8 +10,8 @@ import Header from '@/components/Header';
 import Settings from '@/components/Settings';
 
 export default function Home() {
-  const [ideas, setIdeas] = useState<BusinessIdea[]>([]);
-  const [selectedIdea, setSelectedIdea] = useState<BusinessIdea | null>(null);
+  const [ideas, setIdeas] = useState<Idea[]>([]);
+  const [selectedIdea, setSelectedIdea] = useState<Idea | null>(null);
   const [loading, setLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -23,12 +23,13 @@ export default function Home() {
   const loadInitialIdeas = async () => {
     try {
       const titles = await gemini.generateBusinessIdeas("innovative business ideas");
-      const newIdeas = titles.map((title) => ({
-        id: `idea-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      const newIdeas = titles.map((title, index) => ({
+        id: `temp-${index}`,
         title,
         description: null,
         category: "Business Innovation",
-        created_at: new Date().toISOString()
+        created_at: new Date().toISOString(),
+        metadata: {}
       }));
       setIdeas(newIdeas);
     } catch (error) {
@@ -50,10 +51,17 @@ export default function Home() {
     
     try {
       const description = await gemini.generateBusinessDescription(selectedIdea.title);
-      setIdeas(ideas.map(idea => 
-        idea.id === selectedIdea.id ? { ...idea, description } : idea
-      ));
-      setSelectedIdea({ ...selectedIdea, description });
+      const result = await database.createBusinessIdea({
+        ...selectedIdea,
+        description
+      });
+      
+      if (result.data) {
+        setIdeas(ideas.map(idea => 
+          idea.id === selectedIdea.id ? { ...idea, description } : idea
+        ));
+        setSelectedIdea({ ...selectedIdea, description });
+      }
     } catch (error) {
       console.error('Failed to generate description:', error);
     }
