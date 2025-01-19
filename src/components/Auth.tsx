@@ -1,14 +1,10 @@
 "use client";
 
-import { useState } from 'react';
 import { Auth } from '@supabase/auth-ui-react';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
 import { supabase } from '@/lib/supabase';
-import ResendConfirmation from './ResendConfirmation';
 
 export default function AuthComponent() {
-  const [email, setEmail] = useState('');
-
   return (
     <div className="max-w-md w-full mx-auto p-4">
       <Auth
@@ -42,18 +38,7 @@ export default function AuthComponent() {
         }}
         providers={['google']}
         redirectTo={`${window.location.origin}/auth/callback`}
-        localization={{
-          variables: {
-            sign_in: {
-              email_input: (email) => {
-                setEmail(email);
-                return email;
-              }
-            }
-          }
-        }}
       />
-      {email && <ResendConfirmation email={email} />}
     </div>
   );
 } 
