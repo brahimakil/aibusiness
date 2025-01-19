@@ -13,11 +13,11 @@ export default function Settings({ isOpen, onClose }: Props) {
   const [language, setLanguage] = useState('en');
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') || 'light';
+    const savedTheme = localStorage.getItem('theme') || 'dark';
     const savedLanguage = localStorage.getItem('language') || 'en';
     setTheme(savedTheme);
     setLanguage(savedLanguage);
-    document.documentElement.classList.toggle('dark', savedTheme === 'dark');
+    document.documentElement.classList.toggle('dark', true);
   }, []);
 
   const handleThemeChange = () => {
