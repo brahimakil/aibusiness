@@ -1,46 +1,32 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect } from 'react';
-
-type Language = 'en' | 'es' | 'fr' | 'de' | 'zh' | 'ja';
+import { createContext, useContext, useState } from 'react';
 
 type AppContextType = {
-  isDarkMode: boolean;
-  toggleDarkMode: () => void;
-  language: Language;
-  setLanguage: (lang: Language) => void;
+  loading: boolean;
+  theme: 'light' | 'dark';
+  toggleTheme: () => void;
 };
 
-const AppContext = createContext<AppContextType | undefined>(undefined);
+const AppContext = createContext<AppContextType>({
+  loading: true,
+  theme: 'light',
+  toggleTheme: () => {},
+});
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
-  const [isDarkMode, setIsDarkMode] = useState(false);
-  const [language, setLanguage] = useState<Language>('en');
+  const [loading, setLoading] = useState(true);
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
-  useEffect(() => {
-    // Initialize dark mode from system preference
-    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      setIsDarkMode(true);
-    }
-  }, []);
-
-  useEffect(() => {
-    document.documentElement.classList.toggle('dark', isDarkMode);
-  }, [isDarkMode]);
-
-  const toggleDarkMode = () => setIsDarkMode(!isDarkMode);
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+  };
 
   return (
-    <AppContext.Provider value={{ isDarkMode, toggleDarkMode, language, setLanguage }}>
+    <AppContext.Provider value={{ loading, theme, toggleTheme }}>
       {children}
     </AppContext.Provider>
   );
 }
 
-export const useApp = () => {
-  const context = useContext(AppContext);
-  if (context === undefined) {
-    throw new Error('useApp must be used within an AppProvider');
-  }
-  return context;
-}; 
+export const useApp = () => useContext(AppContext); 

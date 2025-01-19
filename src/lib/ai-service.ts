@@ -1,7 +1,15 @@
 import { gemini } from './gemini';
 
+type Idea = {
+  id: string
+  title: string
+  description: string | null
+  category: string
+  created_at: string
+}
+
 export const aiService = {
-  async generateAndStoreIdeas(prompt: string): Promise<BusinessIdea[]> {
+  async generateIdeas(prompt: string): Promise<Idea[]> {
     try {
       const titles = await gemini.generateBusinessIdeas(prompt);
       
@@ -9,7 +17,7 @@ export const aiService = {
         titles.map(async (title) => {
           const description = await gemini.generateBusinessDescription(title);
           return {
-            id: `idea-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+            id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
             title,
             description,
             category: prompt,
