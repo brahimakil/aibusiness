@@ -45,10 +45,17 @@ export default function SavedIdeasPage() {
     }
   };
 
+  const updateSavedIdeas = () => {
+    const saved = localStorage.getItem('savedIdeas');
+    if (saved) {
+      setSavedIdeas(JSON.parse(saved));
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
-      <div className="container mx-auto px-4 py-4 sm:py-6 max-w-6xl">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+      <div className="container mx-auto px-4 py-4 sm:py-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
             Saved Ideas
           </h1>
@@ -60,8 +67,7 @@ export default function SavedIdeasPage() {
           </Link>
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4
-                      scale-[0.98] sm:scale-100 transform-gpu">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
           {savedIdeas.length === 0 ? (
             <div className="col-span-full text-center py-12">
               <p className="text-gray-600 dark:text-gray-400">
@@ -106,6 +112,7 @@ export default function SavedIdeasPage() {
               idea={selectedIdea}
               onClose={() => setSelectedIdea(null)}
               onGenerateDescription={generateDescription}
+              onSaveChange={updateSavedIdeas}
             />
           )}
         </AnimatePresence>
