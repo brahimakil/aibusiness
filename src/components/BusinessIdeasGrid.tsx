@@ -28,7 +28,8 @@ export default function BusinessIdeasGrid({ ideas, onIdeaClick, selectedId }: Pr
       variants={container}
       initial="hidden"
       animate="show"
-      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8 p-4 sm:p-8"
+      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 
+                 p-2 sm:p-4 max-w-5xl mx-auto scale-95 sm:scale-100"
     >
       {ideas.map((idea) => (
         <motion.div

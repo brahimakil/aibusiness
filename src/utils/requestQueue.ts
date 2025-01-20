@@ -7,7 +7,7 @@ type QueuedRequest = {
 class RequestQueue {
   private queue: QueuedRequest[] = [];
   private processing = false;
-  private requestDelay = 1000; // 1 second between requests
+  private requestDelay = 0; // Changed from 1000 to 0 for initial load
 
   async add<T>(request: () => Promise<T>): Promise<T> {
     return new Promise((resolve, reject) => {
@@ -38,8 +38,10 @@ class RequestQueue {
         request.reject(error);
       }
 
-      // Wait before processing next request
-      await new Promise(resolve => setTimeout(resolve, this.requestDelay));
+      // Only add delay between subsequent requests, not for the first load
+      if (this.queue.length > 0) {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
     }
 
     this.processing = false;

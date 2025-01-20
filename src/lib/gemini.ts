@@ -27,23 +27,47 @@ export const gemini = {
     });
   },
 
-  async generateBusinessIdeas(prompt: string): Promise<string[]> {
+  async generateBusinessIdeas(prompt: string): Promise<Array<{title: string, category: string}>> {
     const text = await this.generateWithRetry(`
-      Generate 10 innovative business ideas related to: ${prompt}
-      Rules:
-      1. Each idea should be a short, catchy title
-      2. Make them realistic and implementable
-      3. Focus on modern trends and technology
-      4. Keep each title under 60 characters
+      Generate 10 simple but descriptive business ideas.
+      Each response should be in format: Title | Category
       
-      Format the response as plain text with one idea per line.
-      Do not include numbers or special characters.
+      Rules:
+      1. Use simple words but be specific
+      2. Keep titles 3-4 words max
+      3. Make the value clear in the title
+      4. Mix different business types
+      5. Focus on in-demand services
+      
+      Good examples:
+      Quick Wedding Photo App | Photography
+      Local Food Delivery Hub | Food Service
+      Pet Memory Photo Books | Pet Services
+      Remote Work Setup Kit | Office Solutions
+      Kids Birthday Party Box | Event Planning
+      Handmade Soap Workshop | Craft Business
+      Quick Website Builder App | Web Services
+      Virtual Fitness Coach | Health Tech
+      Emergency Tech Support | IT Service
+      Custom Gift Box Service | E-commerce
+      
+      Bad examples (too vague):
+      ❌ Photography Business
+      ❌ Online Shop
+      ❌ Food Delivery
+      
+      Return exactly 10 ideas, one per line, using the Title | Category format.
+      Make each idea specific and solve a clear need in the market.
     `);
     
     return text
       .split('\n')
       .map(line => line.trim())
       .filter(line => line.length > 0)
+      .map(line => {
+        const [title, category] = line.split('|').map(s => s.trim());
+        return { title, category: category || 'Business Innovation' };
+      })
       .slice(0, 10);
   },
 
@@ -51,15 +75,31 @@ export const gemini = {
     return this.generateWithRetry(`
       Create a detailed business plan for: "${title}"
       
-      Include these sections:
-      1. Business Overview
-      2. Target Market
-      3. Revenue Model
-      4. Key Features
-      5. Implementation Steps
-      6. Potential Challenges
+      Write a clear and structured analysis using these sections.
+      Format each section header in plain text followed by a colon, then the content.
+      Do not use any special characters, asterisks, or markdown symbols.
       
-      Make it concise but informative. Use markdown formatting.
+      Format like this:
+      Business Overview:
+      Write 2-3 sentences about core concept and value proposition here.
+      Write 2-3 sentences about key differentiators here.
+      
+      Target Market:
+      Write 2-3 sentences about primary customer segments and market potential here.
+      
+      Revenue Model:
+      Write 2-3 sentences about revenue streams and pricing strategy here.
+      
+      Key Features:
+      Write 2-3 sentences about main offerings and unique selling points here.
+      
+      Implementation Steps:
+      Write 2-3 sentences about initial requirements and launch strategy here.
+      
+      Potential Challenges:
+      Write 2-3 sentences about market risks and mitigation strategies here.
+      
+      Keep paragraphs concise and clear. Use natural language without any special formatting.
     `);
   },
 
