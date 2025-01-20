@@ -14,13 +14,13 @@ export const aiService = {
       const titles = await gemini.generateBusinessIdeas(prompt);
       
       const ideas = await Promise.all(
-        titles.map(async (title) => {
-          const description = await gemini.generateBusinessDescription(title);
+        titles.map(async (titleObj) => {
+          const description = await gemini.generateBusinessDescription(titleObj.title);
           return {
             id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-            title,
+            title: titleObj.title,
             description,
-            category: prompt,
+            category: titleObj.category,
             created_at: new Date().toISOString()
           };
         })
