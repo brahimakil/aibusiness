@@ -76,28 +76,43 @@ export const gemini = {
       Create a detailed business plan for: "${title}"
       
       Write a clear and structured analysis using these sections.
+      Include relevant emojis at the start of each section.
       Format each section header in plain text followed by a colon, then the content.
       Do not use any special characters, asterisks, or markdown symbols.
       
       Format like this:
-      Business Overview:
+      🎯 Quick Overview:
       Write 2-3 sentences about core concept and value proposition here.
       Write 2-3 sentences about key differentiators here.
       
-      Target Market:
-      Write 2-3 sentences about primary customer segments and market potential here.
+      💰 Expected Earnings:
+      Write 3 bullet points about revenue potential:
+      - First 3 months projection
+      - After 6 months projection
+      - Year 1 potential
       
-      Revenue Model:
-      Write 2-3 sentences about revenue streams and pricing strategy here.
+      👥 Perfect For:
+      Write 4-5 bullet points about ideal customer segments:
+      - Customer type 1 with specific needs
+      - Customer type 2 with specific needs
       
-      Key Features:
-      Write 2-3 sentences about main offerings and unique selling points here.
+      🚀 Step-by-Step Launch Plan:
+      List 5 numbered steps for implementation:
+      1. First step details
+      2. Second step details
       
-      Implementation Steps:
-      Write 2-3 sentences about initial requirements and launch strategy here.
+      💡 Success Strategies:
+      Write 4 bullet points about key success factors
       
-      Potential Challenges:
-      Write 2-3 sentences about market risks and mitigation strategies here.
+      💰 Required Investment:
+      - Minimum starting budget
+      - Recommended budget
+      - Optional extras
+      
+      ⚠️ Common Challenges & Solutions:
+      List 3 challenges with solutions:
+      1. Challenge: Description
+         Solution: Approach
       
       Keep paragraphs concise and clear. Use natural language without any special formatting.
     `);
